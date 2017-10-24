@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+    <!-- spring配置文件，配置和业务逻辑相关的 主要包括数据源，和mybatis的整合，事务加强-->
+    <context:component-scan base-package="com.article">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <context:property-placeholder location="classpath:dbconfig.properties"/>
+
+    <bean id="pooledDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property value="${jdbc.jdbcUrl}" name="jdbcUrl"/>
+        <property value="${jdbc.driverClass}" name="driverClass"/>
+        <property value="${jdbc.user}" name="user"/>
+        <property value="${jdbc.password}" name="password"/>
+    </bean>
+
+    <!-- 配置和mybatis的整合-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!-- mybatis全局配置文件的位置-->
+        <property name="configLocation" value="classpath:mybatis-config.xml"></property>
+        <!--数据源的位置-->
+        <property name="dataSource" ref="pooledDataSource"></property>
+        <!--mapper文件的位置-->
+        <property name="mapperLocations" value="classpath:dao/*.xml"></property>
+
+    </bean>
+
+
+
+
+
+
+    <bean id="articleService" class="com.article.service.serviceImpl.ArticleServiceImpl"  />
+    <bean id="commentService" class="com.article.service.serviceImpl.CommentServiceImpl"></bean>
+    <bean id="userService" class="com.article.service.serviceImpl.UserServiceImpl"></bean>
+    <bean id="starService" class="com.article.service.serviceImpl.StarServiceImpl"></bean>
+    <bean id="garnerService" class="com.article.service.serviceImpl.GarnerServiceImpl"></bean>
+
+    <!--配置扫描器，将mybatis接口加入到ioc容器中-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!-- 扫描所有dao接口的实现，加入到ioc容器当中-->
+        <property name="basePackage" value="com.article.dao"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+    </bean>
+
+    <!-- 事务控制-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="pooledDataSource"></property>
+    </bean>
+
+    <!--开启基于注解的事物，使用xml配置形成的事物-->
+    <aop:config>
+        <!--切入点表达式   ..双点的意思是service包下还有子包都可以 service 包下的所有子包 类和方法都行 后面的..表示参数任意多也行-->
+        <aop:pointcut expression="execution(* com.article.service.serviceImpl..*(..))" id="txPoint"/>
+        <!-- 配置事物增强 事物如何切入-->
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="txPoint"></aop:advisor>
+    </aop:config>
+    <!--配置事务增强，食物如何切入 -->
+    <tx:advice  id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <!-- 事务点切入的所有方法都是事物方法-->
+            <tx:method name="*"/>
+            <!--以get开始的所有方法-->
+            <tx:method name="get*" read-only="true"></tx:method>
+        </tx:attributes>
+    </tx:advice>
+</beans>

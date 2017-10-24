@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.article.dao.GarnerMapper">
+  <resultMap id="BaseResultMap" type="com.article.bean.Garner">
+    <constructor>
+      <idArg column="garner_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="user_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="article_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="garner_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="garner_value" javaType="java.lang.Integer" jdbcType="INTEGER" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    garner_id, user_id, article_id, garner_date, garner_value
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from garner
+    where garner_id = #{garnerId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from garner
+    where garner_id = #{garnerId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.article.bean.Garner">
+    insert into garner (garner_id, user_id, article_id, 
+      garner_date, garner_value)
+    values (#{garnerId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{articleId,jdbcType=INTEGER}, 
+      #{garnerDate,jdbcType=TIMESTAMP}, #{garnerValue,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.article.bean.Garner">
+    insert into garner
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="garnerId != null">
+        garner_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="articleId != null">
+        article_id,
+      </if>
+      <if test="garnerDate != null">
+        garner_date,
+      </if>
+      <if test="garnerValue != null">
+        garner_value,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="garnerId != null">
+        #{garnerId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="articleId != null">
+        #{articleId,jdbcType=INTEGER},
+      </if>
+      <if test="garnerDate != null">
+        #{garnerDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="garnerValue != null">
+        #{garnerValue,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.article.bean.Garner">
+    update garner
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="articleId != null">
+        article_id = #{articleId,jdbcType=INTEGER},
+      </if>
+      <if test="garnerDate != null">
+        garner_date = #{garnerDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="garnerValue != null">
+        garner_value = #{garnerValue,jdbcType=INTEGER},
+      </if>
+    </set>
+    where garner_id = #{garnerId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.article.bean.Garner">
+    update garner
+    set user_id = #{userId,jdbcType=INTEGER},
+      article_id = #{articleId,jdbcType=INTEGER},
+      garner_date = #{garnerDate,jdbcType=TIMESTAMP},
+      garner_value = #{garnerValue,jdbcType=INTEGER}
+    where garner_id = #{garnerId,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from garner
+  </select>
+
+
+  <select id="selectByUserId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM garner
+    WHERE user_id = #{userId,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByArticleId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM garner
+    WHERE article_id = #{articleId,jdbcType=INTEGER}
+  </select>
+</mapper>

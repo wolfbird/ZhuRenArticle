@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.article.dao.ArticleMapper">
+  <resultMap id="BaseResultMap" type="com.article.bean.Article">
+    <constructor>
+      <idArg column="article_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="user_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="article_avatar" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="article_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="article_value" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="article_content" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="article_hidden" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="article_title" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    article_id, user_id, article_avatar, article_date, article_value, article_content, 
+    article_hidden, article_title
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from article
+    where article_id = #{articleId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from article
+    where article_id = #{articleId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.article.bean.Article">
+    insert into article (article_id, user_id, article_avatar, 
+      article_date, article_value, article_content, 
+      article_hidden, article_title)
+    values (#{articleId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{articleAvatar,jdbcType=VARCHAR}, 
+      #{articleDate,jdbcType=TIMESTAMP}, #{articleValue,jdbcType=INTEGER}, #{articleContent,jdbcType=VARCHAR}, 
+      #{articleHidden,jdbcType=INTEGER}, #{articleTitle,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.article.bean.Article">
+    insert into article
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="articleId != null">
+        article_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="articleAvatar != null">
+        article_avatar,
+      </if>
+      <if test="articleDate != null">
+        article_date,
+      </if>
+      <if test="articleValue != null">
+        article_value,
+      </if>
+      <if test="articleContent != null">
+        article_content,
+      </if>
+      <if test="articleHidden != null">
+        article_hidden,
+      </if>
+      <if test="articleTitle != null">
+        article_title,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="articleId != null">
+        #{articleId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="articleAvatar != null">
+        #{articleAvatar,jdbcType=VARCHAR},
+      </if>
+      <if test="articleDate != null">
+        #{articleDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="articleValue != null">
+        #{articleValue,jdbcType=INTEGER},
+      </if>
+      <if test="articleContent != null">
+        #{articleContent,jdbcType=VARCHAR},
+      </if>
+      <if test="articleHidden != null">
+        #{articleHidden,jdbcType=INTEGER},
+      </if>
+      <if test="articleTitle != null">
+        #{articleTitle,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.article.bean.Article">
+    update article
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="articleAvatar != null">
+        article_avatar = #{articleAvatar,jdbcType=VARCHAR},
+      </if>
+      <if test="articleDate != null">
+        article_date = #{articleDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="articleValue != null">
+        article_value = #{articleValue,jdbcType=INTEGER},
+      </if>
+      <if test="articleContent != null">
+        article_content = #{articleContent,jdbcType=VARCHAR},
+      </if>
+      <if test="articleHidden != null">
+        article_hidden = #{articleHidden,jdbcType=INTEGER},
+      </if>
+      <if test="articleTitle != null">
+        article_title = #{articleTitle,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where article_id = #{articleId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.article.bean.Article">
+    update article
+    set user_id = #{userId,jdbcType=INTEGER},
+      article_avatar = #{articleAvatar,jdbcType=VARCHAR},
+      article_date = #{articleDate,jdbcType=TIMESTAMP},
+      article_value = #{articleValue,jdbcType=INTEGER},
+      article_content = #{articleContent,jdbcType=VARCHAR},
+      article_hidden = #{articleHidden,jdbcType=INTEGER},
+      article_title = #{articleTitle,jdbcType=VARCHAR}
+    where article_id = #{articleId,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM article
+  </select>
+  <select id="selectByUserId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM article
+    WHERE user_id = #{userId,jdbcType=INTEGER}
+  </select>
+</mapper>
